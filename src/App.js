@@ -3,6 +3,7 @@ import { BrowserRouter, Link, NavLink, Route, Switch } from "react-router-dom";
 
 const BreedsUrl = "https://dog.ceo/api/breeds/list/all";
 const BreedRandomUrl = " https://dog.ceo/api/breeds/image/random";
+const BreedHoundUrl = "https://dog.ceo/api/breed/hound/images";
 
 class Breeds extends React.Component {
   constructor(props) {
@@ -51,6 +52,52 @@ class Breeds extends React.Component {
   }
 }
 
+class Breed extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      breed: [],
+      isLoading: true,
+      error: null,
+    };
+  }
+
+  async componentWillMount() {
+    try {
+      const response = await fetch(BreedHoundUrl);
+      const breed = await response.json();
+      this.setState({ breed: breed.message });
+    } catch (error) {
+      this.setState(() => ({ error }));
+    } finally {
+      this.setState(() => ({ isLoading: false }));
+    }
+  }
+
+  render() {
+    if (this.state.isLoading) {
+      return "...Loading...";
+    }
+
+    if (this.state.error) {
+      return "...Error...";
+    }
+
+    return (
+      <>
+        <ul>
+          {this.state.breed.map((breedName, index) => (
+            <p key={index}>
+              <img src={breedName} alt="No"></img>
+            </p>
+          ))}
+        </ul>
+      </>
+    );
+  }
+}
+
 class Random extends React.Component {
   constructor(props) {
     super(props);
@@ -85,9 +132,14 @@ class Random extends React.Component {
       return `...${this.state.error}...`;
     }
 
-    return <><div>
-      <img src={this.state.random} alt="No"></img>
-      </div></>;
+    return (
+      <>
+        <div>
+          <h1>Image</h1>
+          <img src={this.state.random} alt="No"></img>
+        </div>
+      </>
+    );
   }
 }
 
@@ -110,7 +162,10 @@ class App extends React.Component {
           <Route path="/breeds">
             <Breeds />
           </Route>
-          <Route path="/breed"></Route>
+          <Route path="/breed">
+            {/* {({ match: { params: { breedName } } }) => <Breed breedName={breedName}/>} */}
+            <Breed />
+          </Route>
           <Route path="/random">
             <Random />
           </Route>
