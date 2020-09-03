@@ -163,13 +163,11 @@ class App extends React.Component {
             <Breeds />
           </Route>
           <Route path="/breed">
-            {/* {({ match: { params: { breedName } } }) => <Breed breedName={breedName}/>} */}
             <Breed />
           </Route>
           <Route path="/random">
             <Random />
           </Route>
-
           <Route>No found</Route>
         </Switch>
       </BrowserRouter>
