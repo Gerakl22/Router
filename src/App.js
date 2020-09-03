@@ -6,16 +6,14 @@ const BreedRandomUrl = " https://dog.ceo/api/breeds/image/random";
 
 class Breeds extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.state = {
-
-    }
+    this.state = {};
   }
-  
+
   render() {
     const listOfBreeds = Object.keys(this.props.breeds);
-    console.log(listOfBreeds)
+    console.log(listOfBreeds);
     return (
       <>
         <ul>
@@ -30,8 +28,6 @@ class Breeds extends React.Component {
   }
 }
 
-
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -44,22 +40,27 @@ class App extends React.Component {
   }
 
   async componentWillMount() {
-
     try {
       const response = await fetch(BreedsUrl);
       const breeds = await response.json();
-      this.setState({breeds: breeds.message})
-    } catch(error) {
-      this.setState(() => ({error}))
+      this.setState({ breeds: breeds.message });
+    } catch (error) {
+      this.setState(() => ({ error }));
     } finally {
-      this.setState(() => ({isLoading: false}))
+      this.setState(() => ({ isLoading: false }));
     }
-    
-
-    
   }
 
   render() {
+    if (this.state.isLoading) {
+      return "...Loading...";
+    }
+
+    if (this.state.error) {
+      return "...Error...";
+    }
+
+    
     return (
       <BrowserRouter>
         <ul>
@@ -74,7 +75,9 @@ class App extends React.Component {
           </li>
         </ul>
         <Switch>
-          <Route path="/breeds"><Breeds breeds={this.state.breeds}/></Route>
+          <Route path="/breeds">
+            <Breeds breeds={this.state.breeds} />
+          </Route>
           <Route path="/breed"></Route>
           <Route path="/random"></Route>
 
